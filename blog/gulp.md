@@ -220,7 +220,7 @@ module.exports = function(pluginOptions) {
 
 另外，`_transform` 函数不需要返回值，其返回值无用途。
 
-## 实践
+## 插件开发实践
 
 ### 插件处理流程
 
@@ -275,7 +275,7 @@ module.exports = function() {
 }
 ```
 
-_transform 中的 `this` 同时是个 `EventEmitter` 实例，可以触发错误事件。
+`_transform` 中的 `this` 同时是个 `EventEmitter` 实例，可以触发错误事件。
 
 ### 单输入多输出
 
