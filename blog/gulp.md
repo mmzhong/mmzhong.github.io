@@ -30,6 +30,8 @@ gulp [flags] <task> <task> ...
 * `gulp --version` ： 查看全局和本地的 gulp 版本
 * `gulp --tasks` ： 打印当前 gulpfile.js 中的任务列表及其依赖任务
 
+> `npm 5.2+` 内置了 [npx](https://www.npmjs.com/package/npx) 工具，可以免去全局包的安装麻烦。例如 `npx gulp` 首先检查 `$PATH` 中是否有 `gulp` 命令，然后检查项目本地二进制命令，如果找到就运行命令；如果都没有找到，它会**临时安装**此包然后**一次性执行**，这个安装是临时的，命令结束后立刻被删除，所以本地或者全局都找不到此包。
+
 ### gulp
 
 使用 `npm i gulp -D` 安装项目本地模块，从而可以在 gulpfile.js 中使用其接口定义任务。
