@@ -1,0 +1,8 @@
+name: mmzhong
+markdown: kramdown
+timezone: Asia/Shanghai
+permalink: /blog/:year/:month/:day/:title
+title: Zhong Ming
+description: 学习沉淀
+exclude: 
+  - node_modules

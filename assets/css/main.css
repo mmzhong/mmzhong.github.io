@@ -1,0 +1,82 @@
+.entrance {
+  width: 100%;
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
+.sticker {
+  height: 120px;
+  width: 120px;
+}
+
+.links a {
+  margin: 0 1rem;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 80rem;
+}
+
+.content > h1 {
+  text-align: center;
+}
+.posts {
+  max-width: 68rem;
+  margin: 0 auto;
+  list-style: none;
+}
+.posts > li {
+  margin: 0;
+  padding: 1.6rem 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #acb4bb;
+}
+
+.posts > li > span {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.posts > li > h3 {
+  display: inline;
+  margin: 0 0 0 20px;
+}
+
+.posts-header {
+  margin-top: 5rem;
+  text-align: center;
+}
+
+footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+}
+
+/* Mobile screen */
+@media (max-width: 40.0rem) {
+  h3 {
+    font-size: 2rem;
+  }
+  .posts > li > span {
+    display: none;
+  }
+  .posts > li > h3 {
+    margin: 0px;
+  }
+}
+
+/* Larger than tablet screen */
+@media (min-width: 80.0rem) {
+  
+}
+
+/* Larger than desktop screen */
+@media (min-width: 120.0rem) {
+  
+}
