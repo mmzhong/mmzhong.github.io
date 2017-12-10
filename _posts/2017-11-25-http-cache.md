@@ -1,4 +1,10 @@
-# HTTP Cache
+---
+layout: post
+title: HTTP Cache
+data: 2017-11-25
+tags: http,cache,expires,cache-control
+desc: HTTP 缓存配置
+---
 
 无论是软件应用还是硬件应用，缓存都扮演着重要的角色，其重要性无可置疑。
 
