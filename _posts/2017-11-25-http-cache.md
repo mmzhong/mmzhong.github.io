@@ -19,7 +19,7 @@ desc: HTTP 缓存配置
 
 ## 基本理解
 
-![HTTP Cache](../img/http-cache.png)
+![HTTP Cache](/assets/img/http-cache.png)
 
 HTTP 缓存涉及到请求-响应链上的多个角色，包括浏览器、代理和服务器。其中，浏览器自身实现了缓存功能，为了便于理解，上图中把浏览器缓存从浏览器中独立出来，但是要记住浏览器缓存是浏览器的一部分。
 
