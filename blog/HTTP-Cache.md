@@ -42,6 +42,7 @@ HTTP 缓存主要通过 HTTP 首部来实现缓存控制。这些与缓存相关
 | Pragma | HTTP/1.0 | 通用首部 |
 | Age | HTTP/1.1 | 响应首部 |
 | Expires | HTTP/1.0 | 实体首部 |
+| Cache-Control | HTTP/1.1 | 通用首部 |
 | Etag | HTTP/1.1 | 响应首部 |
 | If-Match | HTTP/1.1 | 请求首部 |
 | If-None-Match | HTTP/1.1 | 请求首部 |
@@ -55,13 +56,19 @@ HTTP 缓存主要通过 HTTP 首部来实现缓存控制。这些与缓存相关
 
 ### Cache-Control
 
-`Cache-Control` 的内容可由多个字段组合而成，以逗号分隔，如 `Cache-Control: private,max-age=3600` 。下面对常用的可取字段进行说明。
+`Cache-Control` 是**通用首部**，这意味着它既可以出现在请求中，也可以出现在响应中。
+
+`Cache-Control` 的值可由多个字段组合而成，以逗号分隔，如 `Cache-Control: private,max-age=3600` 。下面对常用的可取字段进行说明。
 
 `public`： 表示当前响应数据所有用户**共享的**，可以被任何设备缓存，包括客户端、代理服务器等。
 
 `private`： 表示当前响应数据是单个用户所**独占的**，只能被客户端缓存，不能被代理服务器缓存。
 
 `max-age=<seconds>`： 指定缓存的有效时间，单位为秒。其值是任意整数，0 和负数表示缓存过期，正数值加上当前响应头中的 `Date` 首部值即为过期时间。
+
+`max-stale[=<seconds>]`： 只用于请求，表示客户端仍然愿意接受过期缓存，只要过期时间没超过指定时间，如果未指定时间，则表示任何过期的时间。
+
+`min-fresh=<seconds>`： 只用于请求，表示客户端愿意接受还剩余多少秒过期的缓存。
 
 `s-maxage=<seconds>`： 功能与 `max-age` 一致，但它**仅作用于共享缓存**，对私有缓存无效。
 
@@ -71,17 +78,55 @@ HTTP 缓存主要通过 HTTP 首部来实现缓存控制。这些与缓存相关
 
 `no-transform`： 表示响应的实体数据不应被转换。`Content-Encoding` 、`Content-Range` 和 `Content-Type` 首部也不能被修改。实际应用中，有些代理服务器会对图片资源进行格式转换以节省空间或者带宽。
 
-### Etag/If-Matched/If-None-Match
+作为通用首部，其部分指令值可以出现在请求首部，也可以出现在响应首部，两者可能略有区别：
+
+| 指令值 | 请求 | 响应 |
+| --- | :---: | :---: |
+| `public` | - | 可共享数据，可被任何设备缓存 |
+| `private` | - | 用户私有数据，只能被客户端缓存 |
+| `no-cache` | 使用前需验证 | 使用前需验证 |
+| `no-store` | 禁止使用缓存数据 | 禁止缓存 |
+| `max-age` | 最大过期时间 | 最大过期时间 |
+| `min-fresh` | 要求响应至少还剩余多少过期时间 | - |
+| `max-stale` | 超过过期时间多少秒内仍愿意接受 | - |
+| `no-transform` | 不要转换格式 | 不要转换格式 |
 
 ### Last-Modified/If-Modified-Since
 
+`If-Modified-Since` 首部比较的是资源的修改时间，精度为秒。一般来说，验证资源是否修改过，对比资源的修改时间是一种不错的办法。
+
+
+### ETag/If-Matched/If-None-Match
+
+`ETag` 叫实体标签（Entity Tag），用于表示实体资源是否发生变化，类似 MD5 。当响应的首部信息或者消息实体发生变化时， 实体标签也会改变。
+
+使用过程：
+
+1. 客户端首次请求时，服务端会把对应实体标签写入`ETag` 首部，和资源一起返回给客户端
+2. 客户端收到后保存资源和实体标签
+3. 客户端再次发起相同的请求时，把之前保存的实体标签放入 `If-None-Match` 首部发给服务端
+4. 服务端比较 `If-None-Match` 中的实体标签和所请求资源的实体标签，如果两者相同，则返回 304，否则返回 200 和新的实体标签
+
+当客户端本地存储有多个版本的资源时，会把所有的实体标签都上传，形如 `ETag: "abc","def"` ，服务端会使用 `ETag` 返回匹配中的实体标签值。
+
+实体标签分为强标签（Strong ETag）和弱标签（Weak ETag），弱标签以 `W/` 开头，如 `ETag: W/"1234"` 。强标签使用强比较，弱标签使用弱比较。强比较意味着两个比较对象的每一个字节都相同，弱比较意味着两者**语义相同**(Semantic Equivalence)。举个栗子，假如响应首部包含一个渲染时间 `Rendered-Time`，A 响应的渲染时间为 365，B 响应的渲染时间为 345，两个响应的实体内容一致。这种情况下，我们可以说 A 和 B 弱比较相等，强比较不相等。
+
+一般来说，静态内容使用强标签，动态生成的内容使用弱标签。
+
+由此可以看出，实体首部可以解决一些 `Last-Modified` 无法解决的问题：
+
+1. 某些服务器不能精确的得到文件的最后修改时间
+2. 修改时间变了并不意味着内容的改变，比如我改完保存后又改回去
+3. 修改时间只能精确到秒，一秒内的修改无法判断
+
+`If-Match` 对应 `ETag` 的另一种用法：避免“空中碰撞”，以防编辑冲突。当客户端使用 PUT 或者 POST 更新服务端资源时，需要使用 `If-Match` 来携带实体标签给服务端，以确保客户端要修改的资源没有被别人修改过，避免覆盖别人的修改。不过这种用法比较少，可以不用深究。
 
 ### 其他
 
 ## 参考文章
 
 * [HTTP/1.0, RFC1945](https://tools.ietf.org/html/rfc1945)
-* [HTTP/1.0, RFC2616](https://tools.ietf.org/html/rfc2616)
+* [HTTP/1.1, RFC2616](https://tools.ietf.org/html/rfc2616)
 * [HTTP/1.1 Caching, RFC7323](https://tools.ietf.org/html/rfc7234)
 * [HTTP 缓存, Google Developers](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn)
-
+* [The-difference-between-strong-and-weak-ETags](http://www.bendeutsch.de/blog/The-difference-between-strong-and-weak-ETags)
