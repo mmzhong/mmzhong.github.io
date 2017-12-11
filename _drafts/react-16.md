@@ -1,4 +1,9 @@
-# React v16
+---
+default: post
+title: React v16
+tags: react,jsx
+desc: React v16 入门
+---
 
 ## JSX
 

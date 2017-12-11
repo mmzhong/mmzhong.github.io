@@ -1,4 +1,9 @@
-# Stream
+---
+layout: post
+title: Stream
+tags: stream
+desc: 理解 Stream
+---
 
 ## 流式编程
 
