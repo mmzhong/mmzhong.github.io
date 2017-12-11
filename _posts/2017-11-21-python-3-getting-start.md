@@ -1,4 +1,10 @@
-# Python 3 快速入门
+---
+layout: post
+title: Python 3 快速入门
+date: 2017-11-21
+tags: python3
+desc: 简短的 Python 入门示例
+---
 
 这是一篇简短的入门总结，主要参考自 [Learn X in Y minutes: Python 3](https://learnxinyminutes.com/docs/python3/)。
 
