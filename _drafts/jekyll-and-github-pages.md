@@ -56,10 +56,27 @@ gem "github-pages", group: :jekyll_plugins
 
 ```bash
 # 修改 Gemfile ，然后安装依赖
-gem install 
+bundle install 
 
 # 启动本地的 jekyll
 bundle exec jekyll serve
+
+# 如果使用的是 Windows 10 的 linux 子系统，可能需要添加 --force_polling
+bundle exec jekyll serve --force_polling
+```
+
+### 代码高亮
+
+jekyll 默认使用 rouge 对代码进行高亮，但是代码高亮的样式文件需要自行生成并引入。
+
+高亮样式预览可参考 [highlight.js](https://highlightjs.org/static/demo/) 。
+
+```bash
+gem install rouge
+
+# 生成指定主题的高亮样式
+rougify help style
+rougify style monokai > /assets/css/syntax.css
 ```
 
 ### 项目结构

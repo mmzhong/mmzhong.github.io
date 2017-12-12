@@ -59,6 +59,20 @@ footer {
   text-align: center;
 }
 
+.rouge-table {
+  width: auto;
+  margin: 0;
+}
+.rouge-table pre {
+  border: none;
+}
+pre.lineno {
+  text-align: right;
+}
+pre > code {
+  padding-left: 0; 
+}
+
 /* Mobile screen */
 @media (max-width: 40.0rem) {
   h3 {
