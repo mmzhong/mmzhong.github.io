@@ -24,6 +24,10 @@
   margin-top: 2rem; 
   text-align: center;
 }
+
+.post-list {
+  margin: 5rem 0;  
+}
 .posts {
   max-width: 68rem;
   margin: 0 auto;
@@ -48,7 +52,6 @@
 }
 
 .posts-header {
-  margin-top: 5rem;
   text-align: center;
 }
 
