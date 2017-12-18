@@ -510,3 +510,115 @@ interface Square extends Shape, PenStroke {
 ### 接口拓展类
 
 接口拓展（extends）类类型时，该接口会**继承所有类成员，但不继承其实现**，就像在接口中声明了这些类成员一样。这里的继承也包含**私有成员和受保护成员**，这也意味着该接口只能被这个类或者其子类实现。
+
+## 类
+
+ES6 开始支持的 `class`，让 JS 开发者可以更直观的进行 OOP 开发，而不必再基于函数和原型链的别扭写法。
+
+### 语法
+
+```ts
+class Greeter {
+  greeting: string;
+  constructor(message: string) {
+    this.greeting = message;
+  }
+  hello() {
+    return `Hello, ${this.greeting}`;
+  }
+}
+let greeter = new Greeter('world');
+```
+
+### 继承
+
+使用 `extends` 来继承已存在的类以创建新类。
+
+```ts
+class Animal {
+  move(distanceInMeters: number = 0) {
+    console.log(`Animal moved ${distanceInMeters}m.`);
+  }
+}
+class Dog extends Animal {
+  bark() {
+    console.log('Woof! Woof!');
+  }
+}
+```
+
+其中，`Animal` 称为**基类**，`Dog` 称为派生（Derived）类。由于 `Dog` 继承自 `Animal` ，所以 `Animal` 是 `Dog` 的**父类**，`Dog` 是 `Animal` 的**子类**。子类会继承父类的所有属性（私有属性和方法除外，下文会深入说明）。
+
+```ts
+class Animal {
+  name: string;
+  constructor(theName: string) {
+    this.name = theName;
+  }
+  move(distanceInMeters: number = 0) {
+    console.log(`${this.name} moved ${distanceInMeters}m.`);
+  }
+}
+
+class Snake extends Animal {
+  constructor(name: string) {
+    super(name);
+  }
+  move(distanceInMeters = 5) {
+    console.log("Slithering...");
+    super.move(distanceInMeters);
+  }
+}
+```
+
+规则：
+
+* 如果子类包含构造函数，那么构造函数内必须先调用 `super()` 来初始化父类的构造函数，否则不能使用 `this`
+* 子类方法会覆盖父类的同名方法，称为**重写**（Override）
+
+### 修饰符（Modifiers）
+
+修饰符用来控制对属性和方法的**访问权限**，包含 `public`、`private` 和 `protected` 。
+
+`public` 是默认的修饰符，表示**访问无门槛**。没有显式指明修饰符时使用的修饰符就是 `public` 。
+
+`private` 表示仅**当前类内部能访问**，其子类都不能访问。这也就是为什么子类无法继承父类的私有成员。
+
+`protected` 与 `private` 类似，但它**允许其子类内部访问**。如果声明一个受保护的构造函数，那么该类可以被继承，但**只能**在其子类中被实例化。
+
+**注意**：TS 的类型检查是基于类型结构的。当比较两种类型是否兼容时，只有他们两的成员类型兼容，那么就认定为这两种类型兼容。但是，当类型包含 `private` 和 `protected` 成员时，TS 会采取特殊的兼容比对规则。此时，只有来自**相同声明**才会被认为是兼容的。
+
+```ts
+class Animal {
+    private name: string;
+    constructor(theName: string) { this.name = theName; }
+}
+class Rhino extends Animal {
+    constructor() { super("Rhino"); }
+}
+class Employee {
+    private name: string;
+    constructor(theName: string) { this.name = theName; }
+}
+```
+
+虽然 `Animal` 和 `Employee` 具有相同的类型结构，但是 `private name: string` 并不是同一个声明。而 `Rhino` 和 `Animal` 则是类型兼容的，因为 `Rhino` 继承自 `Animal` ， `private name: string` 属于同一个声明。
+
+还有一个 `readonly` 修饰符，只能用于类属性。只读属性只能在被声明或者构造函数中被初始化，然后就再也不能修改。
+
+### 参数属性（Parameter properties）
+
+当构造函数的**参数被修饰符（`public`、`private` 、 `protected` 和 `readonly` ）修饰**时，该参数可自动转变为类属性。这中简便的做法可以省去不少模板化代码。
+
+```ts
+class Octopus {
+    constructor(readonly name: string) {}
+}
+// equals to
+class Octopus {
+  readonly name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+```
