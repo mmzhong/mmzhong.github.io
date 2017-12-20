@@ -2,7 +2,7 @@
 layout: post
 title: TypeScript 函数
 tags: typescript,handbook,class
-desc: TypeScript 快速手册： 函数
+desc: "TypeScript 快速手册：函数"
 ---
 
 TS 在标准 JS 函数的基础上新增了一些功能。
