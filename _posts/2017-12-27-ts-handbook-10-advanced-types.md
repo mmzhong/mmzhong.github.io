@@ -318,7 +318,7 @@ function area(s: Shape) {
 
 为了实现这个功能，有两种办法：
 
-1. 开启 `--strictNullChecks` 并声明返回值类型
+* 开启 `--strictNullChecks` 并声明返回值类型
 
 ```ts
 function area(s: Shape): number { // error: returns number | undefined
@@ -341,7 +341,7 @@ function area(s: Shape): number { // error: returns number | undefined
 
 这个方法里声明返回值类型的作用就在于使得推断类型与声明类型产生冲突，从而提示开发者遗漏的情况。
 
-2. 使用 `never` 类型来让编译器检查所有的可能
+* 使用 `never` 类型来让编译器检查所有的可能
 
 ```ts
 function assertNever(x: never): never {
