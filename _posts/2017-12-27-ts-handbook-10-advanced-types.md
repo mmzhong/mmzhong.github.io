@@ -437,11 +437,11 @@ let strings: string[] = pluck(person, ['name']);
 
 编译器会检查 `person` 是否拥有 `name` 属性。这里用到了两种**类型运算**：
 
-1. `keyof T` 称为**索引类型查询运算**（Index Type Query Operator）。
+* `keyof T` 称为**索引类型查询运算**（Index Type Query Operator）
 
 对于任何类型 `T` ，`keyof T` 就是 `T` 的所有**公有属性**成员名称组成的联合类型。如 `keyof Person` 等价于 `'name' | 'age'` 。
 
-2. `T[K]` 称为**索引访问运算**（Indexed Access Operator）。
+* `T[K]` 称为**索引访问运算**（Indexed Access Operator）
 
 它与数组或者对象的成员运算符 `[]` 类似，只不过作用的对象是类型 `T`，值为对应键名的类型。如 `Person['name']` 表示的类型为 `string` 。
 
