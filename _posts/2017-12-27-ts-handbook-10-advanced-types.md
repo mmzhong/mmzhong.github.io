@@ -20,7 +20,7 @@ desc: "TypeScript 快速手册：高级类型"
 交集类型可以认为是多种类型是 `and` 的关系，使用 `&` 表示。
 例如 `Person & Serializable & Loggable` 由三种类型合并而成，该类型的对象将会拥有三种类型的所有成员。
 
-交集类型多见于**混合（Mixin）和其他不符合经典面向对象编程模式的用法中，但是这些用法却在 JS 中经常用到，比如 `extend()` 函数。
+交集类型多见于**混合**（Mixin）和其他不符合经典面向对象编程模式的用法中，但是这些用法却在 JS 中经常用到，比如 `extend()` 函数。
 
 ## 联合类型
 
@@ -437,9 +437,13 @@ let strings: string[] = pluck(person, ['name']);
 
 编译器会检查 `person` 是否拥有 `name` 属性。这里用到了两种**类型运算**：
 
-1. `keyof T` 称为索引类型查询运算（Index Type Query Operator）。对于任何类型 `T` ，`keyof T` 就是 `T` 的所有**公有属性**成员名称组成的联合类型。如 `keyof Person` 等价于 `'name' | 'age'` 。
+1. `keyof T` 称为**索引类型查询运算**（Index Type Query Operator）。
 
-2. `T[K]` 称为索引访问运算（Indexed Access Operator）。它与数组或者对象的成员运算符 `[]` 类似，只不过作用的对象是类型 `T`，值为对应键名的类型。如 `Person['name']` 表示的类型为 `string` 。
+对于任何类型 `T` ，`keyof T` 就是 `T` 的所有**公有属性**成员名称组成的联合类型。如 `keyof Person` 等价于 `'name' | 'age'` 。
+
+2. `T[K]` 称为**索引访问运算**（Indexed Access Operator）。
+
+它与数组或者对象的成员运算符 `[]` 类似，只不过作用的对象是类型 `T`，值为对应键名的类型。如 `Person['name']` 表示的类型为 `string` 。
 
 ## 映射类型
 
@@ -551,7 +555,7 @@ console.log(proxyPerson.name.get()); // => mm
 
 ### 映射类型推断
 
-映射类型的作用是**包装**（Wrap）类型属性，**展开**也是很容易的。
+映射类型的作用是**包装**（Wrap）类型属性，**展开**（Unwrapping）也是很容易的。
 
 ```ts
 function unproxify<T>(t: Proxify<T>): T {
@@ -561,7 +565,7 @@ function unproxify<T>(t: Proxify<T>): T {
   }
   return result;
 }
-let orignalProps = unproxify(proxyProps);
+let orignalPerson = unproxify(proxyPerson);
 ```
 
 上面的例子中，编译器能根据映射类型推断出函数返回值的类型。
