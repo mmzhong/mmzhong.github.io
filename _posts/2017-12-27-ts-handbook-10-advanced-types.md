@@ -5,6 +5,14 @@ tags: typescript,handbook,advanced types
 desc: "TypeScript 快速手册：高级类型"
 ---
 
+预备知识：
+
+* 所有类型（包括原始类型）都可以像变量一样参与运算，运算结果为类型
+* 类型运算符包括 `typeof`、`keyof`、`[]`、`in`、`&`、`|` 等
+
+所以要获得一种新类型，有两种方式： 1. 直接定义； 2. 使用类型运算。
+预备知识有助于理解本文内容。
+
 ## 交集类型
 
 交集类型（Intersection Type）是把多种类型**合并**在一起形成的一种**新类型**，新类型拥有所有类型的成员。
@@ -41,7 +49,7 @@ pet.swim();    // => error
 
 当然，我们也可以在调用前先判断是否是特定类型然后再调用其方法，这就是下面要说的内容。
 
-## 类型守卫和辨别类型
+## 类型守卫和类型辨别
 
 要想在运行时辨别某种具体的类型，最简单的办法是检查其成员是否存在，如：
 
@@ -94,7 +102,7 @@ function padLeft(value: string, padding: string | number) {
 1. 如果该类型不是 `any`，会确定为构造函数 `prototype` 属性的类型
 2. 该类型所有构造函数（包括父类的）返回值组成的联合类型
 
-## 可空类型
+## 可为空类型
 
 TS 中有两种特殊的类型：`null` 和 `undefined` 。
 默认的，编译器认为这两种类型可以赋值给任何类型。这意味着，即使我们想禁止这种赋值行为，默认情况下也是不可能阻止的。
@@ -122,7 +130,7 @@ f(1); // => ok
 f(1, undefined); // => ok
 ```
 
-### 类型守护和类型断言
+### 类型守卫和类型断言
 
 如何判断当前值是否是 `null` 呢？
 
@@ -201,7 +209,7 @@ let s = people.next.next.next.name;
 但是，**不允许**类型别名出现在**非属性**中：
 
 ```ts
-type Yikes = Array<Yikes>;
+type Yikes = Array<Yikes>; // => error
 ```
 
 上面的 `Tree<T>` 跟定义接口非常相似，但是类型别名与接口还是存在一些微小的差别，值得注意。
@@ -305,7 +313,7 @@ function area(s: Shape) {
 }
 ```
 
-使用可辨识联合类型的好处就是编译器知道 `kind` 的所有可能情况，这样就有助于**彻底检查**（Exhaustiveness Checking） `switch` 的所有可能情况。
+使用可辨识联合类型的好处就是编译器知道 `kind` 的所有可能情况，这样就有助于**完整性检查**（Exhaustiveness Checking） `switch` 的所有可能情况。
 上面我们新增 `Triangle` 后，我们希望编译器会提醒我们漏掉了 `Triangle` ，但是并没有。还需要再增加点内容。
 
 为了实现这个功能，有两种办法：
@@ -351,9 +359,10 @@ function area(s: Shape) {
 
 当我们遗漏掉 `Triangle` 的情况时，`s` 就会被赋值为一个 `Triangle` 类型，从而引发类型冲突。
 
-## this 多态类型
+## this 类型的多态性
 
-this 多态类型指的是类或者接口的子类型中 `this` 的多态特性。这种多态称为**F-界多态性**（F-bounded Polymorphism），利用这种特性，可以更容易实现链式调用。
+this 类型的多态性指的是类或者接口的子类型中 `this` 的多态特性。
+这种多态称为**F-界多态性**（F-bounded Polymorphism），利用这种特性，可以更容易实现链式调用。
 
 ```ts
 class BasicCalculator {
@@ -398,7 +407,7 @@ let v = new ScientificCalculator(2)
 从 `BasicCalculator` 的定义可以看出， `multiply()` 返回值类型是 `BasicCalculator` 。
 `multiply()`  后紧接着调用 `sin()` ，然而 `BasicCalculator`
 并没有 `sin()` 方法，按理说此处应该会引发编译错误，但是并没有。
-这就是 this 多态类型的体现。使用 this 类型的多态性后，`multiply()` 返回值类型会自动切换为 `ScientificCalculator` 。
+这就是 this 类型多态性的体现。因为 this 类型的多态性，编译器会自动把 `multiply()` 返回值类型会自动切换为 `ScientificCalculator` 。
 
 ## 索引类型
 
@@ -426,12 +435,135 @@ let person: Person = { name: 'BirdMan', age: 18 };
 let strings: string[] = pluck(person, ['name']); 
 ```
 
-编译器会检查 `person` 是否拥有 `name` 属性。这里用到了两种类型运算：
+编译器会检查 `person` 是否拥有 `name` 属性。这里用到了两种**类型运算**：
 
-1. `keyof T` 称为索引类型查询运算（Index Type Query Operator）。对于任何类型 `T` ，`keyof T` 就是 `T` 的所有公有属性成员名称组成的联合类型。如 `keyof Person` 等价于 `'name' | 'age'` 。
+1. `keyof T` 称为索引类型查询运算（Index Type Query Operator）。对于任何类型 `T` ，`keyof T` 就是 `T` 的所有**公有属性**成员名称组成的联合类型。如 `keyof Person` 等价于 `'name' | 'age'` 。
 
-2. `T[K]` 称为索引访问运算（Indexed Access Operator）。如 `person['name']` 对应 `Person['name']` 的类型，即 `string` 。
+2. `T[K]` 称为索引访问运算（Indexed Access Operator）。它与数组或者对象的成员运算符 `[]` 类似，只不过作用的对象是类型 `T`，值为对应键名的类型。如 `Person['name']` 表示的类型为 `string` 。
 
 ## 映射类型
 
-同态类型（Homomorphic Type）
+经常会有这样的需求：基于一个现有类型创建所有属性都是可选属性的新类型。
+例如，基于 `Person` 创建一个所有属性都为可选属性的新类型：
+
+```ts
+interface Person {
+  name: string,
+  age: number
+}
+// 手动定义
+interface PersonPartial {
+  name?: string,
+  age?: number
+}
+```
+
+有什么办法能不从头开始定义 `PersonPartial` 吗？因为这样很麻烦呢！
+
+有。TS 提供了这么一种基于旧类型创建新类型的方式：**映射类型**。
+在映射类型中，新类型会使用相同的方式**转换**旧类型的每个属性。
+比如：
+
+```ts
+type Partial<T> = {
+  [P in keyof T]?: T[P]
+}
+type PersonPartial = Partial<Person>;
+```
+
+`Partial<T>` 就是映射类型，它里面使用的 `in` 运算符与 `for .. in` 类似，`P` 会循环绑定 `keyof T` 的所有元素。
+要注意的是，映射类型仅能作用于公有成员属性，不含成员方法，这是由 `keyof` 运算所决定的。
+
+类似的，还可以定义：
+
+```ts
+type Readonly<T> = {
+  readonly [P in keyof T]: T[P];
+}
+```
+
+也可以把 `keyof T` 移动到类型变量中，以约束第二个类型变量：
+
+```ts
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[K];
+}
+type Record<K extends string, T> = {
+  [P in K]: T;
+}
+```
+
+`Partial`、`Readonly`、`Pick` 和 `Record` 是非常常用的，所以 TS 的标准库中默认就已经包含了。
+它们中前三个是同态的，称为**同态类型**（Homomorphic Type）。
+同态意味着**映射转换不会丢失修饰符**，属性原来拥有什么修饰符，经过映射后的属性仍然拥有对应的修饰符。
+比如，如果 `Person.name` 是 `readonly` 的，那么 `Partial<Person>.name` 将变成是只读且可选的。
+
+`Record` 不是同态类型，因为它并没有一个输入类型可以作为它复制属性的来源。
+非同态类型实质上是创建了新属性，所以它们不能从任何地方复制属性修饰符。
+
+多个映射类型一起使用的例子：
+
+```ts
+interface Person {
+  name: string,
+  age: number
+}
+
+type ReadonlyAndPartialPerson = Readonly<Partial<Person>>;
+// equals to 
+type ReadonlyAndPartialPerson = {
+  readonly name?: string;
+  readonly age?: number;
+}
+```
+
+一个实际的使用例子：
+
+```ts
+type Proxy<T> = {
+  get(): T;
+  set(value: T): void;
+}
+type Proxify<T> = {
+  [P in keyof T]: Proxy<T[P]>;
+}
+function proxify<T>(o: T): Proxify<T> {
+  let result = {} as Proxify<T>;
+  for (const k in o) {
+    result[k] = {
+      get(): T[keyof T] {
+        return o[k];
+      },
+      set(value: T[keyof T]): void {
+        o[k] = value;
+      }
+    }
+  }
+  return result;
+}
+let person = {
+  name: 'mm',
+  age: 18
+};
+let proxyPerson = proxify(person);
+console.log(proxyPerson.name.get()); // => mm
+```
+
+### 映射类型推断
+
+映射类型的作用是**包装**（Wrap）类型属性，**展开**也是很容易的。
+
+```ts
+function unproxify<T>(t: Proxify<T>): T {
+  let result = {} as T;
+  for (const k in t) {
+    result[k] = t[k].get();
+  }
+  return result;
+}
+let orignalProps = unproxify(proxyProps);
+```
+
+上面的例子中，编译器能根据映射类型推断出函数返回值的类型。
+
+展开推断仅能用于同态映射类型。如果映射类型不是同态的，那么必须给函数额外新增一个显式的类型参数。
