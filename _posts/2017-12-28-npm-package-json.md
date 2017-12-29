@@ -1,11 +1,11 @@
 ---
 layout: post
-title: NPM package.json 理解
+title: npm package.json 理解
 tags: npm,package.json
-desc: NPM package.json 理解
+desc: npm package.json 理解
 ---
 
-package.json 是 NPM 包的**配置文件**，记录着包的所有相关信息。
+package.json 是 npm 包的**配置文件**，记录着包的所有相关信息。
 
 它使用**标准 JSON** 格式，而不是 JS 对象字面量。
 
@@ -30,7 +30,7 @@ npm 使用**包名和包版本号**来唯一识别一个包。包的变动应该
 * 不使用与 Node 核心模块同名的包名
 * 不出现 `js` 或 `node` 字眼，因为默认就是 js 包
 * 不宜太长，但应该能够描述包功能，因为没人愿意 `require` 一个很长的名字
-* 检查下 [NPM](https://www.npmjs.com/) 上是否已经存在此包名
+* 检查下 [npm](https://www.npmjs.com/) 上是否已经存在此包名
 
 包名前面可以加上一个可选的包域名，如 `@mm/mypackage` 。
 
@@ -120,19 +120,19 @@ npm 使用**包名和包版本号**来唯一识别一个包。包的变动应该
 
 #### 环境信息
 
-1. `PATH`
+* `PATH`
 
 如果依赖某些包的可执行命令，如 `gulp`，那么这些可执行命令会被添加到运行时的 `PATH`，这意味着可以直接使用 `gulp` 命令而无需指明具体路径，如 `{ "scripts": { "build": "gulp build" } }`。
 
-2. `package.json`
+* `package.json`
 
 `package.json` 中的**字段信息**也会被添加到运行环境，使用 `process.env.npm_package_<field>` 获取，如 `process.env.npm_package_name` 为当前包的包名。对象会被扁平化，如 `process.env.npm_package_scripts_test` 。
 
-3. npm config
+* npm config
 
 npm 的配置信息也会被添加到环境信息，使用 `process.env.npm_config_<field>` 获取。例如： `process.env.npm_config_registry` 为 `'http://npm.example.com/'` 。
 
-4. lifecycle
+* lifecycle
 
 使用 `process.env.npm_lifecycle_event` 获取当前脚本所处的执行周期。例如：
 
