@@ -181,7 +181,7 @@ declare namespace D3 {
 declare var d3: D3.Base;
 ```
 
-## 模块 VS 命名空间
+## 模块 vs. 命名空间
 
 模块和命名空间都可以包含实现代码和声明。
 
