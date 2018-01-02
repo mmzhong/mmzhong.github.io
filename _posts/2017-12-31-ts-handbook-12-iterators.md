@@ -9,9 +9,9 @@ desc: "TypeScript 快速手册：遍历器"
 
 TS 中，如果一个对象实现了 `Symbol.iterator` 属性，那么就认为它是**可遍历类型**。
 一些内置的类型如 `Array`、`Map`、`Set`、`String`、`Int32Array` 等默认就已经实现了 `Symbol.iterator` 属性。
-`Symbol.iterator` 函数的职责就是返回用于遍历的值列表。
+`Symbol.iterator` 函数的职责就是**返回用于遍历的值列表**。
 
-`for..of` 是 ES6 新引入遍历语句。当把它应用于可遍历对象时，它调用的就是 `Symbol.iterator` 属性。
+`for..of` 是 ES6 新引入的遍历语句。当把它应用于可遍历对象时，它调用的就是 `Symbol.iterator` 属性。
 
 `for..in` 也是用于遍历，两者的区别在于：
 
@@ -30,6 +30,6 @@ for (let i of list) {
 
 ## 代码生成
 
-受限于语言支持，如果目标生成 ES3 或 ES5 的代码，那么可遍历器仅仅能用于 `Array` 类型，否则编译器将抛出错误，即便是被遍历对象实现了 `Symbol.iterator` 。
+受限于语言支持情况，如果目标生成 ES3 或 ES5 代码，那么可遍历器**仅仅**能用于 `Array` 类型，否则编译器将抛出错误，即便是被遍历对象实现了 `Symbol.iterator` 。
 
 如果目标语言不低于 ES6 ，那么编译器生成的代码将直接使用 `for..of` 。

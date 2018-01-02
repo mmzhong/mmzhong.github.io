@@ -22,7 +22,7 @@ let s2 = Symbol('key'); // => 'Symbol(key)`
 还有一种创建方式：
 
 ```ts
-let s1 = Symbol.for('foo'); // creat
+let s1 = Symbol.for('foo'); // create
 let s2 = Symbol.for('foo'); // found
 s1 === s2; // => true
 Symbol.keyFor(s1); // => 'foo'
@@ -79,7 +79,7 @@ Symbols 对常规方法**不可见**，包括：
 
 以上所涉及的都是用户自定义的 Symbols ，除此以外，ES6 还定义了 11 个常用的**内置 Symbols** ，用于**指向语言内部使用的方法**。
 
-上面我们知道，Symbol 可以用来当做属性名和方法名，它可以是用户定义或者内置。而在 JS 语言本身实现时，也可以使用 Symbols ，这些 Symbols 就通过内置 Symbols 暴露给开发者。它们就像语言给开发者留下的**钩子**（Hook），开发者可以通过给这些内置 Symbols 赋予新值，从而改变某些运算或者方法的行为。
+上面我们知道，Symbol 可以用来当做属性名和方法名，它可以是用户定义或者内置。而在 JS 语言本身实现时，也使用了 Symbols ，这些 Symbols 就通过内置 Symbols 暴露给开发者。它们就像语言给开发者留下的**钩子**（Hook），开发者可以通过给这些内置 Symbols 赋予新值，从而改变某些运算或者方法的行为。
 
 * `Symbol.hasInstance`
 
@@ -92,7 +92,7 @@ class C {
   }
 }
 [1, 2, 3] instanceof C; // => false，C 没有 Symbol.hasInstance 方法
-[1, 2, 3] instanceof new C(); // => true，C 的实例有 Symbol.hasInstance 方法
+[1, 2, 3] instanceof new C(); // => true，C 的实例有 Symbol.hasInstance 方法
 
 class Even {
   static [Symbol.hasInstance](obj) {
@@ -104,7 +104,7 @@ class Even {
 
 * `Symbol.isConcatSpreadable`
 
-该 Symbol 属性是一个布尔值，表示对象用于 `Array.prototype.concat()` 时是否可以展开。
+该 Symbol 属性是一个布尔值，表示对象用于 `Array.prototype.concat()` 时是否可以展开。
 
 ```ts
 let a = [3, 4];
@@ -125,7 +125,7 @@ a[Symbol.isConcatSpreadable] = false;
 
 * `Symbol.species`
 
-`Symbol.species` 指向一个构造函数，**运行时**如果需要**再次调用自身构造函数**时，会使用该构造函数。
+`Symbol.species` 指向一个构造函数，**运行时**如果需要**再次调用自身构造函数**，会使用该构造函数。
 
 ```ts
 class ArrayOne extends Array {}
@@ -168,7 +168,7 @@ obj == 'default';   // => true
 
 * `Symbol.toStringTag`
 
-在对象上调用 `Object.prototype.toString()` 时，如果存在 `Symbol.toStringTag` 属性，它的返回值会出现在返回的字符串中，表示对象的类型。也即改变 `[object Object]` 或 `[object Array]` 中的第二个参数。
+在对象上调用 `Object.prototype.toString()` 时，如果存在 `Symbol.toStringTag` 属性，它的返回值会出现在返回的字符串中，表示对象的类型。也即改变 `[object Object]` 或 `[object Array]` 中的第二个参数。
 
 ```ts
 class C {
