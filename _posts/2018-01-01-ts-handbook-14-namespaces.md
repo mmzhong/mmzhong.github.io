@@ -107,7 +107,7 @@ tsc --outFile sample.js Test.ts
 
 另一种，在默认编译行为，每个文件单独编译输出，但是我们需要使用 `<script>` 按序逐个去引用：
 
-```ts
+```html
 <script src="Validation.js" type="text/javascript" />
 <script src="LettersOnlyValidator.js" type="text/javascript" />
 <script src="ZipCodeValidator.js" type="text/javascript" />
