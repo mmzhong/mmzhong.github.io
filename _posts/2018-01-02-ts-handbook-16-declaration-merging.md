@@ -1,7 +1,7 @@
 ---
 layout: post
 title: TypeScript 声明合并
-tags: typescript
+tags: typescript,declaration merging
 desc: "TypeScript 快速手册：声明合并"
 ---
 
