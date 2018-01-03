@@ -179,7 +179,7 @@ npm 的配置信息也会被添加到环境信息，使用 `process.env.npm_conf
 
 ### devDependencies
 
-开发和测试相关的依赖应该写在 `devDependencies` 中。
+开发和测试相关的依赖应该写在**开发依赖** `devDependencies` 中。
 安装这类依赖是使用 `npm install -D` 会自动保存依赖到该字段。
 
 ### peerDependencies
@@ -197,13 +197,13 @@ npm 的配置信息也会被添加到环境信息，使用 `process.env.npm_conf
 ```
 
 模块 `tea-latte` 是 `tea` 的一个插件，且它并不依赖 `tea` ，但是它只能运行在 `tea` 的 `2.x` 版本上。
-这个时候就称 `tea` 为 `tea-latte` 的 `peerDependencies` 。
+这个时候就称 `tea` 为 `tea-latte` 的**同行依赖** `peerDependencies` 。
 
-`npm` v3 开始，不会再默认安装 `peerDependencies` 依赖，而是会警告说这些依赖没有安装。
+`npm` v3 开始，不会再默认安装同行依赖，但是会警告说这些依赖没有安装。
 
 ### bundledDependencies
 
-`bundledDependencies` 也可写做 `bundleDependencies` 。
+**打包依赖** `bundledDependencies` 也可写做 `bundleDependencies` （少了一个字母 d）。
 当我们需要把包保留在本地或者使其可以仅下载一个包就能安装时，可以把所有依赖的包也打包进当前模块。例如：
 
 ```json
@@ -221,7 +221,7 @@ npm 的配置信息也会被添加到环境信息，使用 `process.env.npm_conf
 
 ### optionalDependencies
 
-可选依赖意味着当该依赖找不到或者安装失败时，npm 也不会触发错误。
+**可选依赖**意味着当该依赖找不到或者安装失败时，npm 也不会触发错误。
 但是，包的开发者需要自己处理可选依赖的缺失情况。
 
 ## 环境相关
