@@ -1,7 +1,7 @@
 ---
 layout: post
 title: TypeScript 混合
-tags: typescript
+tags: typescript,mixin
 desc: "TypeScript 快速手册：混合"
 ---
 
