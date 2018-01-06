@@ -82,5 +82,4 @@ define("NamedModule", ["require", "exports"], function (require, exports) {
   })();
   exports.C = C;
 });
-
 ```
