@@ -251,6 +251,31 @@ declare module "path" {
 import url = require('url');
 ```
 
+注意，如果有依赖其他的模块，那么该模块的导入必须放在当前模块内部，否则会报错：`扩大中的模块名称无效。模块“xxx”解析到位于“xxx”处的非类型化模块，其无法扩大`。
+参考：[StackOverflow: typescript-custom-declaration-files-for-untyped-npm-modules](https://stackoverflow.com/questions/42693836/typescript-custom-declaration-files-for-untyped-npm-modules)
+
+错误写法：
+
+```ts
+import * as ESTree from 'estree';
+
+declare module 'walk' {
+//              ~~~~: 扩大中的模块名称无效...
+  export function simple(node: ESTree.Program, visitor: any): void;
+  export function ancestor(node: ESTree.Program, visitor: any): void;
+}
+```
+
+正确写法：
+
+```ts
+declare module 'walk' {
+  import * as ESTree from 'estree';
+  export function simple(node: ESTree.Program, visitor: any): void;
+  export function ancestor(node: ESTree.Program, visitor: any): void;
+}
+```
+
 如果觉得像上面那样细致的定义声明很麻烦，那么可以使用**速记声明**（Shorthand Declaration）：
 
 ```ts
