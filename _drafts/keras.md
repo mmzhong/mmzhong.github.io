@@ -126,8 +126,6 @@ a = np.array([[1,2,3], [4,5,6], [7,8,9]])
 > 对于这两种形式，Keras 使用 `~/.keras/keras.json` 中的 `image_data_format` 属性指定使用哪种形式。在代码中，则可以通过`K.image_data_format()` 查看当前使用的形式。
 > 要注意的是，训练和测试时请采用相同的形式。
 
-### 函数式模型
-
 ### `batch_size`
 
 在使用 Keras 开发时，常常会遇到参数 `batch_size` ，它是什么意思呢？
@@ -144,6 +142,67 @@ a = np.array([[1,2,3], [4,5,6], [7,8,9]])
 > Keras 中的优化器 SGD 指的就是 Stochastic Gradient Descent ，但它实际上用的仍然是小批梯度下降法。
 顺便一提，开发过程中 `epochs` 参数也会频繁出现，它表示训练过程中对整个训练样本遍历多少次。一次 `epoch` 定义为所有训练样本完整走一次向前和向后传播的过程。假如训练集有 1000 样本，`batch_size = 10`，那么就有 100 个小批，因此训练完所有样本需要进行 100 次迭代，这 100 迭代就是 1 次 epoch 。如果 `epochs = 2`，那么就会对这 1000 个样本进行 2 个 100 次迭代。每个 epoch 中是会将所有样本**重新打乱分批**的，虽然这 2 个 epoch 的训练集都是这 1000 个样本，但是每次迭代的小批样本是不一样的。
 
+### 模型
+
+利用 Keras 开发应用的过程就是建立模型（Model）的过程。模型是一种有输入有输出的网络结构。
+
+Keras 中的模型分为两种：序贯（Sequential）模型和函数式（Functional）模型。
+
+序贯模型是一种**典型性**模型，拥有单输入单输出的特点，它的数据流动始终指向输出方向，层与层之间只有相邻关系，不存在跨层连接。
+这种模型编译速度快，操作也简单。
+
+函数式模型是**通用性**模型，序贯模型是它最简单的一种特例。
+它可以拥有多输入多输出，层与层之间可以有更复杂的关系，比如创建共享层。序贯模型满足不了应用场景时，都应该使用函数式模型。
+
+## 第一个模型
+
+人工神经网络（Artificial Neural Network,ANN）
+
+使用 Keras 开发机器学习应用主要包含以下五个步骤：
+
+1. 准备数据
+2. 定义模型
+3. 编译模型
+4. 训练模型
+5. 运行模型
+
+```python
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Activation
+from keras.optimizers import SGD
+
+# 准备数据
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([[0], [1], [1], [0]])
+
+# 定义模型
+model = Sequential()
+model.add(Dense(8, input_dim=2))
+model.add(Activation('tanh'))
+model.add(Dense(1))
+model.add(Activation('sigmoid'))
+
+# 编译模型
+model.compile(loss='binary_crossentropy', optimizer=SGD(lr=0.01))
+
+# 输入数据，训练模型
+model.fit(X, y, batch_size=1, epochs=1000)
+
+# 使用模型预测结果
+print(model.predict_proba(X))
+
+# output
+"""
+[[0.00156281]
+ [0.9944851 ]
+ [0.99450433]
+ [0.00673608]]
+"""
+```
+
+
 ## 参考文章
 
 * [Keras 中文文档](https://keras-cn.readthedocs.io/en/latest/)
+* [Keras HelloWorld](http://keras.dhpit.com/)
