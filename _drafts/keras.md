@@ -13,6 +13,8 @@ desc: Keras 入门指南
 
 值得关注的是，还有一个在浏览器运行 Keras 模型的 JS 库：[Keras.js](https://github.com/transcranial/keras-js) 。
 
+> [Python 3 快速入门](https://mmzhong.github.io/blog/2017/11/21/python-3-getting-start)
+
 ## 安装 Keras
 
 系统信息：windows 10 x64 ，Python 3.6.4 ，Pipenv 9.0.0。
@@ -154,9 +156,7 @@ Keras 中的模型分为两种：序贯（Sequential）模型和函数式（Func
 函数式模型是**通用性**模型，序贯模型是它最简单的一种特例。
 它可以拥有多输入多输出，层与层之间可以有更复杂的关系，比如创建共享层。序贯模型满足不了应用场景时，都应该使用函数式模型。
 
-## 第一个模型
-
-人工神经网络（Artificial Neural Network,ANN）
+## 第一个模型：XOR
 
 使用 Keras 开发机器学习应用主要包含以下五个步骤：
 
@@ -165,6 +165,8 @@ Keras 中的模型分为两种：序贯（Sequential）模型和函数式（Func
 3. 编译模型
 4. 训练模型
 5. 运行模型
+
+下面的例子使用人工神经网络（Artificial Neural Network,ANN）方式实现了`异或`逻辑操作，如 `0 ^ 1 = 1` ，模型训练好后输入 `[[0, 0]]` 将得到结果 `[[0.00156281]]` ，接近 0 。
 
 ```python
 import numpy as np
@@ -178,7 +180,7 @@ y = np.array([[0], [1], [1], [0]])
 
 # 定义模型
 model = Sequential()
-model.add(Dense(8, input_dim=2))
+model.add(Dense(4, input_dim=2))
 model.add(Activation('tanh'))
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
@@ -190,17 +192,35 @@ model.compile(loss='binary_crossentropy', optimizer=SGD(lr=0.01))
 model.fit(X, y, batch_size=1, epochs=1000)
 
 # 使用模型预测结果
-print(model.predict_proba(X))
+print(model.predict(X))
 
 # output
 """
-[[0.00156281]
- [0.9944851 ]
- [0.99450433]
- [0.00673608]]
+[[0.00115794]
+ [0.99167705]
+ [0.99117446]
+ [0.01116507]]
 """
 ```
 
+该实现的 ANN 模型图如下，`X` 的每个元素对应两个蓝色圆圈，`y` 每个元素对应橙色圆圈。
+
+![XOR-ANN-1](/assets/img/xor-nn-1.png)
+
+以上示例还可以把 `activation` 合并到 `Dense`，模型实现如下：
+
+```python
+# 定义模型
+model = Sequential()
+model.add(Dense(4, input_dim=2, activation="tanh"))
+model.add(Dense(1, activation="sigmoid"))
+```
+
+对应的模型图为：
+
+![XOR-ANN-2](/assets/img/xor-nn-2.png)
+
+`Dense`：**全连接层**，它实现的操作为 `output = activation(dot(input, kernel) + bias)`，其中 `activation` 可以通过 `Dense` 的参数指定，如果不指定默认为线性激活函数 `a(x) = x` ，`kernel` 为当前层权值矩阵，`bias` 是偏置量。激活函数会逐个应用于输入的数据。
 
 ## 参考文章
 
