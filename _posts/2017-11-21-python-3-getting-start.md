@@ -196,7 +196,7 @@ other_set = {3, 4, 5}
 some_set & other_set # => {3, 4}， 交集
 some_set | other_set # => {1, 2, 3, 4, 5}，并集
 some_set - other_set # => {1, 2}，差集
-some_set ^ other_set # => {1, 2, 5}，对此差集
+some_set ^ other_set # => {1, 2, 5}，对称差集
 
 # 集合包含关系
 {1, 2} >= {1, 2, 3}   # => False
@@ -305,7 +305,7 @@ def f(arg=i):
 i = 6
 f() # => 5
 
-# 参数默认值值计算一次，尤其要注意默认值为可变数据时的情况
+# 参数默认值只计算一次，尤其要注意默认值为可变数据时的情况
 def f1(a, L=[]):
     L.append(a)
     return L
@@ -477,7 +477,7 @@ if __name__ == '__main__':
 # 继承
 class Superhero(Human):
 
-    # 如果子类想要不做任何修改的完全继承父类，只需要在类代码块使用 `pass`
+    # 如果子类只想继承父类，且不想做任何额外修改，只需要在类代码块使用 `pass`
 
     # 覆盖父类属性
     species = 'Superhuman'
@@ -564,6 +564,6 @@ def say(say_please=False):
     msg = "你能请我喝一杯啤酒么?"
     return msg, say_please
 
-print(say())
-print(say(say_please=True))
+print(say()) # => 你能请我喝一杯啤酒么?
+print(say(say_please=True)) # => 你能请我喝一杯啤酒么? 拜托了!
 ```
