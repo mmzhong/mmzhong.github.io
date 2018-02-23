@@ -1,7 +1,7 @@
 ---
 layout: post
 title: TypeScript 函数
-tags: typescript,handbook,class
+tags: typescript,handbook,function
 desc: "TypeScript 快速手册：函数"
 ---
 
