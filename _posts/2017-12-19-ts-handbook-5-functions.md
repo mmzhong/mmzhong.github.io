@@ -43,7 +43,7 @@ function fn3(firstName = 'John', lastName = 'Smith') {}
 
 ```ts
 function buildName(firstName: string, ...restOfName: string[]) {
-  return firstName + ' ' + resfOfName.join(' ');
+  return firstName + ' ' + restOfName.join(' ');
 }
 ```
 
