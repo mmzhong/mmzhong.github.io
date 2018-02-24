@@ -5,12 +5,13 @@ tags: react,architecture,架构
 desc: React 的诞生故事
 ---
 
-本文主要介绍 React 的诞生过程和架构设计思路。
-内容来自 2014 年的 [OSCON - React Architecture](https://speakerdeck.com/vjeux/oscon-react-architecture)，虽然从今天（2018）来看会有点历史感，但仍然值得学习了解。以史为鉴，可以管窥 Facebook 的工程演进过程。
+本文主要介绍 React 的诞生过程和优化思路。
+
+内容整理自 2014 年的 [OSCON - React Architecture by vjeux](https://speakerdeck.com/vjeux/oscon-react-architecture)，虽然从今天（2018）来看可能会有点历史感，但仍然值得学习了解。以史为鉴，从中也可以管窥 Facebook 优秀的工程管理文化。
 
 ## 字符拼接时代 - 2004
 
-时间回到 2004 年，Mark Zuckerberg 此时还在宿舍捣鼓 Facebook 。
+时间回到 2004 年，Mark Zuckerberg 当时还在宿舍捣鼓最初版的 Facebook 。
 这一年，大家都在用 PHP 的字符串拼接（String Concatenation）功能来开发网站。
 
 ```php
@@ -23,13 +24,13 @@ $str += '</ul>';
 
 这种网站开发方式在当时看来是非常正确的，因为不管是后端开发还是前端开发，甚至根本没有开发经验，都可以使用这种方式搭建一个大型网站。
 
-唯一不足的是，这种开发方式容易造成 XSS 注入等**安全问题**。如果 `$talk->name` 中包含恶意代码，而又没有做任何防护措施，那么攻击者就可以执行任意 JS 代码。于是就诞生了“永远不要相信用户的输入”的安全守则。
+唯一不足的是，这种开发方式容易造成 XSS 注入等**安全问题**。如果 `$talk->name` 中包含恶意代码，而又没有做任何防护措施的话，那么攻击者就可以注入任意 JS 代码。于是就催生了“永远不要相信用户的输入”的安全守则。
 
-最简单的应对方法是对用户的任何输入都进行**转义**（Escape）。然而这也带来了其他麻烦，如果对字符串进行多次转义，那么反转义的次数也得是相同的，否则会无法得到原内容。如果又不小心把 HTML 标签（Markup）给转义了，那么会直接显示 HTML 给用户，造成很差的用户体验。
+最简单的应对方法是对用户的任何输入都进行**转义**（Escape）。然而这也带来了其他麻烦，如果对字符串进行多次转义，那么反转义的次数也必须是相同的，否则会无法得到原内容。如果又不小心把 HTML 标签（Markup）给转义了，那么 HTML 标签会直接显示给用户，从而导致很差的用户体验。
 
 ## XHP 时代 - 2010
 
-到了 2010 年，为了更加高效的编码，同时也避免转义 HTML 标签的错误，Facebook 推出了 XHP 。XHP 是对 PHP 的语法拓展，它允许开发者直接在 PHP 中使用 HTML 标签，而不再使用字符串。
+到了 2010 年，为了更加高效的编码，同时也避免转义 HTML 标签的错误，Facebook 开发了 XHP 。XHP 是对 PHP 的**语法拓展**，它允许开发者直接在 PHP 中使用 HTML 标签，而不再使用字符串。
 
 ```php
 $content = <ul />;
@@ -40,7 +41,7 @@ foreach ($talks as $talk) {
 
 这样的话，所有的 HTML 标签都使用不同于 PHP 的语法，我们可以轻易的分辨哪些需要转义哪些不需要转义。
 
-不久的后来，Facebook 的工程师又发现他们还可以创建**自定义标签**，而且通过组合自定义标签还可以构建大型应用。
+不久的后来，Facebook 的工程师又发现他们还可以创建**自定义标签**，而且通过组合自定义标签有助于构建大型应用。
 而这恰恰是 Semantic Web 和 Web Components 概念的一种实现方式。
 
 ```php
@@ -54,7 +55,9 @@ foreach ($talks as $talk) {
 
 ## JSX - 2013
 
-等到 2013 年，突然有一天，前端工程师 Jordan Walke 向他的经理提出了一个想法：把 XHP 的拓展功能迁移到 JS 中。并且最终说服经理，允许他用 6 个月的时间来验证这个想法。
+等到 2013 年，突然有一天，前端工程师 Jordan Walke 向他的经理提出了一个大胆的想法：把 XHP 的拓展功能迁移到 JS 中。最开始大家都以为他疯了，因为这与当时大家都看好的 JS 框架格格不入。不过他最终还是执着地说服了经理，允许他用 6 个月的时间来验证这个想法。这里不得不说 Facebook 良好的工程师管理哲学让人敬佩，值得借鉴。
+
+> 附：Lee Byron 谈 Facebook 工程师文化：[Why Invest in Tools](https://medium.com/@leeb/why-invest-in-tools-3240ce289930)
 
 要想把 XHP 的拓展功能迁移到 JS ，首要任务是需要一个拓展来让 JS 支持 XML 语法，该拓展称为 JSX 。当时，随着 Node.js 的兴起，Facebook 内部对于转换 JS 已经有相当多的工程实践了。所以实现 JSX 简直轻而易举，仅仅花费了大概一周的时间。
 
@@ -119,7 +122,7 @@ DOM 是树形结构，所以 diff 算法必须是针对树形结构的。目前�
 整整有 17 分钟之长，简直无法想象！
 
 虽然说验证阶段暂不考虑性能问题，但是我们还是可以简单了解下该算法是如何实现的。
-> 附：[完整实现算法](https://grfia.dlsi.ua.es/ml/algorithms/references/editsurvey_bille.pdf)。
+> 附：[完整的 Tree diff 实现算法](https://grfia.dlsi.ua.es/ml/algorithms/references/editsurvey_bille.pdf)。
 
 ![Tree Diff](/assets/img/diff-tree.png)
 
@@ -162,7 +165,7 @@ DOM 是树形结构，所以 diff 算法必须是针对树形结构的。目前�
 结合 `key` ，再加上哈希表，diff 算法最终实现了 O(n) 的最优复杂度。
 至此，可以看到从 XHP 迁移到 JS 的方案可行的。接下来就可以针对各个环节进行逐步优化。
 
-> 附：详细的 diff 理解可以参考 [不可思议的 react diff](https://zhuanlan.zhihu.com/p/20346379) 。
+> 附：详细的 diff 理解：[不可思议的 react diff](https://zhuanlan.zhihu.com/p/20346379) 。
 
 ## 持续优化
 
@@ -252,11 +255,24 @@ Ben Alpert 的做法是，调用 `setState` 时不立即把变更同步到 Virtu
 
 ![Pruning Render](/assets/img/pruning-render.png)
 
-当时，React 虽然提供了 `shouldComponentUpdate` 接口，但是并没有提供一个默认的实现方案，开发者必须自己手动实现才能达到预期效果。
+当时，React 虽然提供了 `shouldComponentUpdate` 接口，但是并没有提供一个默认的实现方案（总是渲染），开发者必须自己手动实现才能达到预期效果。
 
 其原因是，在 JS 中，我们通常使用对象来保存状态，修改状态时是直接修改该状态对象的。也就是说，修改前后的两个不同状态指向了同一个对象，所以当直接比较两个对象是否变更时，它们是相同的，即使状态已经改变。
 
 对此，David Nolen 提出了基于不可变数据结构（Immutable Data Structure）的解决方案。
 该方案的灵感来自于 ClojureScript ，在 ClojureScript 中，大部分的值都是不可变的。换句话说就是，当需要更新一个值时，程序不是去修改原来的值，而是基于原来的值创建一个新值，然后使用新值进行赋值。
 
-David 自己使用 ClojureScript 写了一个针对 React 的方案，叫做 Om 。
+David 使用 ClojureScript 写了一个针对 React 的不可变数据结构方案：[Om](https://github.com/omcljs/om) ，为 `shouldComponentUpdate` 提供了默认实现。
+
+不过，由于不可变数据结构并未被 Web 工程师广为接受，所以当时并未把这项功能合并进 React 。
+遗憾的是，截止到目前，`shouldComponentUpdate` 也仍然未提供默认实现。
+但是 David 却为广大开发者开启了一个很好的研究方向。
+
+如果真想利用不可变数据结构来提高 React 性能，可以参考与 React 师出同门的 [Facebook Immutable.js](https://facebook.github.io/immutable-js/)，它是 React 好搭档！
+
+## 结束语
+
+React 的优化仍在继续，比如 React 16 中新引入 [Fiber](https://github.com/acdlite/react-fiber-architecture)，它是对核心算法的一次重构，即重新设计了检测变更的方法和时机，允许渲染过程可以分段完成，而不必一次性完成。
+受篇幅限制，本文不会深入介绍 Fiber ，有兴趣的可以参考 [React Fiber是什么](https://zhuanlan.zhihu.com/p/26027085) 。
+
+最后，感谢 Facebook 给开源社区带来了如此优秀的项目！
