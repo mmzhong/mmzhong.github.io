@@ -74,3 +74,8 @@ HTTP Cookie 是最典型的浏览器客户端数据存储方式。
 ## 设备类
 
 ## 行为类
+
+
+## 参考文章
+
+* [浅谈Web客户端追踪](http://www.freebuf.com/articles/web/127266.html)
