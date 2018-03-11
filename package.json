@@ -1,0 +1,39 @@
+{
+  "name": "mmzhong.github.io",
+  "description": "mmzhong website",
+  "version": "1.0.0",
+  "author": "ming zhong <eezhongming@gmail.com>",
+  "dependencies": {
+    "gatsby-link": "^1.6.37",
+    "milligram": "^1.3.0",
+    "normalize.css": "^8.0.0"
+  },
+  "keywords": [
+    "mmzhong",
+    "blog"
+  ],
+  "license": "MIT",
+  "main": "n/a",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --trailing-comma es5 --no-semi --single-quote --write \"src/**/*.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/react-helmet": "^5.0.5",
+    "gatsby": "^1.9.218",
+    "gatsby-plugin-react-helmet": "^2.0.6",
+    "gatsby-plugin-styled-components": "^2.0.9",
+    "gatsby-plugin-typescript": "^1.4.17",
+    "gatsby-remark-copy-images": "^0.2.1",
+    "gatsby-remark-katex": "^1.0.13",
+    "gatsby-remark-prismjs": "^1.2.17",
+    "gatsby-source-filesystem": "^1.5.25",
+    "gatsby-transformer-remark": "^1.7.34",
+    "prettier": "^1.11.0",
+    "react-helmet": "^5.2.0",
+    "styled-components": "^3.2.1",
+    "typescript": "^2.7.2"
+  }
+}
