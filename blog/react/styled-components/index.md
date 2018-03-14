@@ -135,7 +135,7 @@ render(
 );
 ```
 
-上面我们使用先后使用 `styled.h1` 和 `styled.section` 创建了 `Title` 和 `Wrapper` 两个组件，它们会真实生成包含响应样式的 `<h1>` 和 `<section>` 。由于 `Title` 和 `Wrapper` 都是组件，因此我们可以跟其他任何 React 组件一样使用它们，最终的效果如下：
+上面我们先后使用 `styled.h1` 和 `styled.section` 创建了 `Title` 和 `Wrapper` 两个组件，它们会生成包含相应样式的 `<h1>` 和 `<section>` 标签。由于 `Title` 和 `Wrapper` 都是组件，因此我们可以跟其他任何 React 组件一样使用它们，最终的效果如下：
 
 ![Hello World](hello-world.png)
 
