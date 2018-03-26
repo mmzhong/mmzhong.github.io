@@ -155,7 +155,7 @@ let o2 = { b: 4, ...o1 };
 // => o2 = { a: 1, b: 4, c: 3}
 ```
 
-> 题外话：如果使用了 ES6 语法，但是又不想添加 `Object.asign` 的 polyfill ，此时可以使用展开实现相同的效果而不需 polyfill 。
+> 题外话：如果使用了 ES6 语法，但是又不想添加 `Object.asign` 的 polyfill ，此时可以使用拓展运算符实现相同的效果而不需 polyfill 。
 
 注意：
 
